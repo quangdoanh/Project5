@@ -1,21 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Quicksand:wght@300..700&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --text-colour : #fff;
+    --primary : #00ADEF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*{
+  font-family: "Quicksand", sans-serif;
+}
+/* Range */
+.range-sm::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ADEF;
+  cursor: pointer;
+	box-shadow: 0px 0px 8px 0px #000000EB;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.range-sm::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ADEF;
+  cursor: pointer;
+	box-shadow: 0px 0px 8px 0px #000000EB;
+}
+/* End Range */
+
+.play-audio .inner-button-play.play .inner-icon-play{
+  display: none;
+}
+.play-audio .inner-button-play.play .inner-icon-pause{
+  display: block;
+}
+.play-audio .inner-button-play .inner-icon-pause{
+  display: none;
+}
+[song-id].active .inner-button-play{
+  background-color: #00ADEF;
+  border-color: #00ADEF;
 }
