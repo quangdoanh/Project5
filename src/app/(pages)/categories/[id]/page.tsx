@@ -1,54 +1,48 @@
-"use client"
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react"; // Thêm useEffect và useState
 import { CardHeader } from "@/app/components/Card/CardHeader";
 import { CardSong } from "@/app/components/Card/CardSong";
 import { Title } from "@/app/components/TitleHeader/Title";
 import { firebaseData } from "@/app/fireBaseConfig";
+
 import { onValue, ref } from "firebase/database";
-// import type { Metadata } from "next";
 
-// export const metadata: Metadata = {
-//   title: "Web nghe nhạc trực tuyến",
-//   description: "Website nghe nhạc online",
-// };
+import type { Metadata } from "next";
 
-export default function CategoriesDetailPage(props: any) {
-  const { id } = props.params;
+export const metadata: Metadata = {
+  title: "Web nghe nhạc trực tuyến",
+  description: "Website nghe nhạc onlie",
+};
 
-  // Sử dụng useState để lưu trữ dữ liệu
-  const [data, setData] = useState<any[]>([]);
-  const [data1, setData1] = useState<any[]>([]);
+export default async function CategoriesDetailPage(props: any) {
+  const { id } = await props.params;
+  const data: any[] = [];
+  const data1: any[] = []
 
-  // Sử dụng useEffect để fetch dữ liệu từ Firebase
-  useEffect(() => {
-    // Fetch dữ liệu category
-    const categoryRef = ref(firebaseData, '/categories/' + id);
-    const unsubscribeCategory = onValue(categoryRef, (item) => {
-      const datafb = item.val();
-      const newData = [{
+
+  onValue(ref(firebaseData, '/categories/' + id), (item) => {
+    const datafb = item.val();
+    data.push(
+      {
+
         img: datafb.image,
         title: datafb.title,
-        desc: datafb.description,
-      }];
-      setData(newData); // Cập nhật state data
+        desc: datafb.description
+      }
+    )
+    onValue(ref(firebaseData, '/songs/'), (song) => {
+      song.forEach((item1) => {
+        const dataSong = item1.val();
+        const key = item1.key;
 
-      // Fetch dữ liệu songs
-      const songsRef = ref(firebaseData, '/songs');
-      const unsubscribeSongs = onValue(songsRef, (song) => {
-        const newData1: any[] = [];
-        song.forEach((item1) => {
-          const dataSong = item1.val();
-          const key = item1.key;
+        if (dataSong.categoryId === id) {
+          onValue(ref(firebaseData, '/singers/' + dataSong.singerId[0]), (singer) => {
 
-          if (dataSong.categoryId === id) {
-            // Fetch dữ liệu singer
-            const singerRef = ref(firebaseData, '/singers/' + dataSong.singerId[0]);
-            const unsubscribeSinger = onValue(singerRef, (singer) => {
-              const dataSing = singer.val();
-              newData1.push({
+            const dataSing = singer.val();
+
+            data1.push(
+              {
                 id: key,
                 img: dataSong.image,
                 namesong: dataSong.title,
@@ -56,21 +50,21 @@ export default function CategoriesDetailPage(props: any) {
                 viewer: dataSong.listen,
                 link: `/song/${key}`,
                 audio: dataSong.audio,
-                wishlist: dataSong.wishlist,
-              });
-              setData1([...newData1]); // Cập nhật state data1
-            });
+                wishlist: dataSong.wishlist
+              }
+            )
 
-            return () => unsubscribeSinger(); // Hủy đăng ký lắng nghe singer
-          }
-        });
-      });
+          });
+        }
 
-      return () => unsubscribeSongs(); // Hủy đăng ký lắng nghe songs
+      })
+
+
+
     });
 
-    return () => unsubscribeCategory(); // Hủy đăng ký lắng nghe category
-  }, [id]); // Dependency array với id để fetch lại dữ liệu khi id thay đổi
+
+  });
 
   return (
     <>
@@ -79,8 +73,8 @@ export default function CategoriesDetailPage(props: any) {
         {data.map((item, index) => (
           <CardHeader key={index} item={item} />
         ))}
-      </div>
 
+      </div>
       {/* Section2 */}
       <div className="inner-wrap">
         <Title title="Danh sách bài hát" />
@@ -89,7 +83,8 @@ export default function CategoriesDetailPage(props: any) {
             <CardSong key={index} item={item} />
           ))}
         </div>
+
       </div>
     </>
   );
-}
+} 

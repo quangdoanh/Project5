@@ -1,6 +1,8 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+
 import { CardSong } from "@/app/components/Card/CardSong";
 import { authDatabase, firebaseData } from "@/app/fireBaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
